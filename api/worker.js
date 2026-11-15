@@ -37,7 +37,8 @@ export default {
     } catch (e) {
       const status = e.status || 500;
       if (status >= 500) console.error(e.stack || e);
-      return cors(json({ erro: e.message || "Erro interno" }, status));
+      const msg = status >= 500 && !e.publico ? "Erro no servidor de pagamentos. Tente de novo." : (e.message || "Erro");
+      return cors(json({ erro: msg }, status));
     }
   },
 };
@@ -64,7 +65,7 @@ function cors(r) {
   h.set("access-control-allow-methods", "GET, POST, OPTIONS");
   return new Response(r.body, { status: r.status, headers: h });
 }
-const erro = (status, message) => Object.assign(new Error(message), { status });
+const erro = (status, message) => Object.assign(new Error(message), { status, publico: true });
 const emailKey = e => String(e || "").toLowerCase().replace(/\./g, ",");
 const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64urlTxt = s => b64url(new TextEncoder().encode(s));
@@ -338,12 +339,16 @@ async function assinaturaOk(req, env, dataId) {
   const manifesto = `id:${String(dataId).toLowerCase()};request-id:${req.headers.get("x-request-id") || ""};ts:${partes.ts};`;
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.MP_WEBHOOK_SECRET), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const mac = [...new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(manifesto)))].map(b => b.toString(16).padStart(2, "0")).join("");
-  return mac === partes.v1;
+  const v1 = String(partes.v1 || "");
+  if (v1.length !== mac.length) return false;
+  let dif = 0;
+  for (let i = 0; i < mac.length; i++) dif |= mac.charCodeAt(i) ^ v1.charCodeAt(i);
+  return dif === 0;
 }
 
 async function mpAviso(req, env, url, ctx) {
   let b = {}; try { b = await req.json(); } catch {}
-  const id = b?.data?.id || url.searchParams.get("data.id") || url.searchParams.get("id");
+  const id = url.searchParams.get("data.id") || b?.data?.id || url.searchParams.get("id");
   const tipo = b?.type || b?.topic || url.searchParams.get("type") || url.searchParams.get("topic");
   if (!id || (tipo && tipo !== "payment")) return json({ ok: true, ignorado: true });
   if (!(await assinaturaOk(req, env, id))) return json({ erro: "assinatura" }, 401);
