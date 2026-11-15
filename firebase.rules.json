@@ -47,12 +47,20 @@
             "status"
           ],
           "$pedido": {
-            ".write": "(!data.exists() && (auth != null && root.child('terminais').child(auth.uid).val() === $loja) && root.child('lojas').child($loja).child('config').child('bloqueado').val() !== true) || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
-            ".validate": "newData.hasChildren(['senha', 'total', 'status', 'itens'])"
+            ".write": "(!data.exists() && auth != null && root.child('terminais').child(auth.uid).val() === $loja && root.child('lojas').child($loja).child('config').child('bloqueado').val() !== true && (newData.child('status').val() === 'aguardando_pagamento' || (newData.child('status').val() === 'pago' && newData.child('pagamento').val() === 'Teste' && !(root.child('lojas').child($loja).child('pagamentos').child('mp').child('conectado').val() === true)))) || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
+            ".validate": "newData.hasChildren(['senha', 'total', 'status', 'itens'])",
+            "status": {
+              ".write": "auth != null && root.child('terminais').child(auth.uid).val() === $loja && data.val() === 'aguardando_pagamento' && newData.val() === 'cancelado'"
+            },
+            ".read": "auth != null && root.child('terminais').child(auth.uid).val() === $loja"
           }
         },
         "terminais": {
           ".write": "(auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)"
+        },
+        "pagamentos": {
+          ".write": false,
+          ".read": "auth != null && root.child('terminais').child(auth.uid).val() === $loja"
         }
       }
     }

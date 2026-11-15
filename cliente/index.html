@@ -158,6 +158,32 @@
               <small>Prévia da tela inicial do terminal</small></div>
           </div>
         </div>
+        <div class="bloco" id="pagamentos" style="margin-top:16px">
+          <div class="bloco-cab"><h2>Pagamentos</h2><span class="etq" id="mpEtq">Verificando</span></div>
+          <div class="bloco-corpo">
+            <div id="mpDesconectado" class="hidden">
+              <div class="pg-linha">
+                <span class="pg-ico"><i data-ic="qr"></i></span>
+                <div class="txt"><b>Receba Pix direto no terminal</b><small>Conecte a conta Mercado Pago do restaurante. O cliente paga no QR Code da tela, o dinheiro cai na sua conta e a senha só sai depois que o pagamento é confirmado.</small></div>
+              </div>
+              <ul class="pg-req">
+                <li><i data-ic="check"></i>Uma conta no Mercado Pago (é grátis)</li>
+                <li><i data-ic="check"></i>Uma chave Pix cadastrada nessa conta</li>
+              </ul>
+              <div class="erro" id="mpErr"></div>
+              <button class="btn marca lg" id="btnMpConectar" style="margin-top:14px">Conectar com Mercado Pago</button>
+              <p class="pg-nota">Você entra na sua conta Mercado Pago e autoriza. Não pedimos senha nem dados bancários aqui.</p>
+            </div>
+            <div id="mpConectado" class="hidden">
+              <div class="pg-linha">
+                <span class="pg-ico ok"><i data-ic="check"></i></span>
+                <div class="txt"><b>Mercado Pago conectado</b><small id="mpConta"></small></div>
+                <button class="btn p claro" id="btnMpDesconectar">Desconectar</button>
+              </div>
+              <p class="pg-nota" id="mpTeste"></p>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -211,6 +237,7 @@ const FIREBASE_CONFIG = {
   appId: "1:223013710287:web:68b813843118acfc6ecaba"
 };
 const ADMIN_EMAIL = "adaeloliveira.ao@gmail.com";
+const API_URL = new URLSearchParams(location.search).has("emulador") ? "http://127.0.0.1:8787" : "https://pdvmovel.adaeloliveira-ao.workers.dev";
 
 import { $, $$, esc, ic, icones, toast, confirmar, perguntar, prepararDialogos, GOOGLE_SVG } from "../assets/ui.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -305,6 +332,7 @@ function abrirLoja(id){
     preencherCfg(); $("#avBloq").classList.toggle("hidden", cfg.bloqueado !== true); });
   listen(L("cardapio"), s => { card = s.val() || {}; card.categorias ||= {}; card.produtos ||= {}; renderCardapio(); });
   listen(L("terminais"), s => { terms = s.val() || {}; renderTerminais(); });
+  listen(L("pagamentos/mp"), s => renderMp(s.val()));
   primeiraCarga = true; vistos = new Set();
   listen(query(L("pedidos"), orderByChild("criadoEm"), limitToLast(80)), s => { recebePedidos(s.val() || {}); });
 }
@@ -538,6 +566,45 @@ $("#btnSalvarCfg").onclick = async () => {
     document.activeElement?.blur(); toast("Alterações salvas. O terminal atualiza em instantes.");
   } catch(e){ $("#cfgErr").textContent = fbErr(e); }
 };
+
+/* ---------------- pagamentos (Mercado Pago) ---------------- */
+async function api(rota, dados){
+  const t = await user.getIdToken();
+  const r = await fetch(API_URL + rota, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + t }, body: JSON.stringify(dados) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.erro || "Não foi possível falar com o servidor de pagamentos.");
+  return d;
+}
+function renderMp(mp){
+  const on = mp?.conectado === true;
+  $("#mpDesconectado").classList.toggle("hidden", on);
+  $("#mpConectado").classList.toggle("hidden", !on);
+  $("#mpEtq").className = "etq " + (on ? "verde" : "");
+  $("#mpEtq").textContent = on ? "Pix ativo" : "Pix desligado";
+  if (on) {
+    $("#mpConta").textContent = [mp.contaNome, mp.contaEmail].filter(Boolean).join(", ") || ("Conta " + mp.contaId);
+    $("#mpTeste").textContent = mp.teste ? "Conta de teste: os pagamentos não são de verdade." : "O Pix do terminal cai nesta conta. Para trocar de conta, desconecte e conecte de novo.";
+  }
+}
+$("#btnMpConectar").onclick = async () => {
+  const b = $("#btnMpConectar"); b.disabled = true; $("#mpErr").textContent = "";
+  try { const { url } = await api("/mp/iniciar", { loja: lojaId }); location.href = url; }
+  catch(e){ $("#mpErr").textContent = e.message; b.disabled = false; }
+};
+$("#btnMpDesconectar").onclick = async () => {
+  if (!await confirmar({ titulo: "Desconectar o Mercado Pago?", texto: "O terminal para de aceitar Pix até você conectar de novo.", ok: "Desconectar", perigo: true })) return;
+  try { await api("/mp/desconectar", { loja: lojaId }); toast("Mercado Pago desconectado"); } catch(e){ toast(e.message, "x"); }
+};
+/* volta do Mercado Pago */
+{
+  const q = new URLSearchParams(location.search), st = q.get("mp");
+  if (st) {
+    const msg = st === "ok" ? "Mercado Pago conectado. O Pix já está ativo no terminal." : (q.get("msg") || "Não foi possível conectar o Mercado Pago.");
+    setTimeout(() => { toast(msg, st === "ok" ? "check" : "x"); irPara("loja"); $("#pagamentos")?.scrollIntoView({ behavior: "smooth" }); }, 1500);
+    q.delete("mp"); q.delete("msg");
+    history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : ""));
+  }
+}
 </script>
 </body>
 </html>

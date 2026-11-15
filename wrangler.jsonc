@@ -1,0 +1,17 @@
+// API de pagamentos (Cloudflare Worker). O site continua no GitHub Pages.
+// Segredos (MP_CLIENT_SECRET, FIREBASE_SA, MP_WEBHOOK_SECRET) ficam só no painel da Cloudflare.
+{
+  "name": "pdvmovel",
+  "main": "api/worker.js",
+  "compatibility_date": "2024-11-01",
+  "workers_dev": true,
+  "keep_vars": true,
+  "observability": { "enabled": true },
+  "kv_namespaces": [{ "binding": "KV", "id": "7702ba3bd26d4e11944e27137d9d7f51" }],
+  "vars": {
+    "FIREBASE_PROJECT": "pdvmovel-95afb",
+    "FIREBASE_DB": "https://pdvmovel-95afb-default-rtdb.firebaseio.com",
+    "PAINEL_URL": "https://adael-oliveira.github.io/pdvmovel/cliente/",
+    "ADMIN_EMAIL": "adaeloliveira.ao@gmail.com"
+  }
+}

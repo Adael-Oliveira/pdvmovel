@@ -235,3 +235,18 @@ main.area{width:100%;max-width:1120px;margin:0 auto;padding:32px 36px 60px}
   .tabela td .acoes .btn{flex:1}
 }
 @media (max-width:380px){.numeros{grid-template-columns:1fr}}
+
+/* pagamentos */
+.pg-linha{display:flex;gap:14px;align-items:flex-start}
+.pg-linha .txt{flex:1;min-width:0}
+.pg-linha .txt b{display:block;font-size:16px}
+.pg-linha .txt small{display:block;color:var(--cinza);font-size:14px;margin-top:2px}
+.pg-ico{width:44px;height:44px;border-radius:12px;background:var(--asfalto);color:var(--marca);display:flex;align-items:center;justify-content:center;flex:none}
+.pg-ico.ok{background:var(--folha-bg);color:var(--folha)}
+.pg-req{list-style:none;display:grid;gap:6px;margin:16px 0 0 58px;color:var(--tinta);font-size:14px}
+.pg-req li{display:flex;gap:8px;align-items:center}
+.pg-req .ic{width:16px;height:16px;color:var(--folha)}
+#btnMpConectar{margin-left:58px}
+.pg-nota{color:var(--cinza);font-size:13px;margin:10px 0 0 58px}
+@media (max-width:560px){.pg-req,.pg-nota{margin-left:0}#btnMpConectar{margin-left:0;width:100%}}
+@media (max-width:900px){body.painel .toast{bottom:calc(80px + env(safe-area-inset-bottom))}}
