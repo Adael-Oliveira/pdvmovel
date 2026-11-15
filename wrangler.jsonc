@@ -12,6 +12,7 @@
     "FIREBASE_PROJECT": "pdvmovel-95afb",
     "FIREBASE_DB": "https://pdvmovel-95afb-default-rtdb.firebaseio.com",
     "PAINEL_URL": "https://adael-oliveira.github.io/pdvmovel/cliente/",
-    "ADMIN_EMAIL": "adaeloliveira.ao@gmail.com"
+    "ADMIN_EMAIL": "adaeloliveira.ao@gmail.com",
+    "MP_CLIENT_ID": "3430856089"
   }
 }
