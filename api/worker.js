@@ -47,6 +47,7 @@ async function rotear(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "") || "/";
   const M = req.method;
   if (M === "GET" && p === "/") return json({ ok: true, servico: "api-pagamentos" });
+  if (M === "GET" && p === "/saude") return saude(env);
   if (M === "POST" && p === "/mp/iniciar") return mpIniciar(req, env, url);
   if (M === "GET" && p === "/mp/retorno") return mpRetorno(req, env, url);
   if (M === "POST" && p === "/mp/desconectar") return mpDesconectar(req, env);
@@ -54,6 +55,14 @@ async function rotear(req, env, url, ctx) {
   if (M === "POST" && p === "/pix/verificar") return pixVerificar(req, env);
   if (M === "POST" && p === "/mp/aviso") return mpAviso(req, env, url, ctx);
   throw erro(404, "Rota não encontrada");
+}
+
+/* confere a configuração sem mostrar nenhum segredo */
+async function saude(env) {
+  const r = { mp_client_id: !!env.MP_CLIENT_ID, mp_client_secret: !!env.MP_CLIENT_SECRET, kv: !!env.KV, firebase: false };
+  try { await db(env, "GET", "pareamentos/000000"); r.firebase = true; } catch (e) { r.firebase_erro = e.message.slice(0, 120); }
+  r.ok = r.mp_client_id && r.mp_client_secret && r.kv && r.firebase;
+  return json(r);
 }
 
 /* ---------------- utilidades ---------------- */
