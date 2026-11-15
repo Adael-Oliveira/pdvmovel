@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do Estabelecimento · Autoatendimento</title>
+<meta name="theme-color" content="#12151C">
+<style>
+:root{--bg:#F3F4F6;--card:#fff;--dark:#12151C;--text:#14161B;--muted:#6B7280;--line:#E5E7EB;--acc:#19C98D;--acc-d:#0E9F6E;--red:#E5484D;--amber:#F5A524;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+header{background:var(--dark);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+header .logo{width:36px;height:36px;border-radius:10px;background:var(--acc);display:flex;align-items:center;justify-content:center;font-weight:900}
+header .t{font-weight:800;font-size:17px}header .s{font-size:12px;opacity:.65}
+header .sp{flex:1}
+header select{background:#1E2733;border:0;border-radius:8px;padding:6px 10px;color:#fff;max-width:180px}
+nav{display:flex;gap:4px;background:#fff;border-bottom:1px solid var(--line);padding:0 10px;overflow-x:auto;position:sticky;top:64px;z-index:9}
+nav button{background:none;border:0;padding:14px 14px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--text);border-color:var(--acc)}
+main{max-width:980px;margin:0 auto;padding:18px}
+h2{font-size:22px;margin-bottom:4px}h3{font-size:16px;margin:18px 0 8px}
+.sub{color:var(--muted);margin-bottom:16px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--dark);color:#fff;white-space:nowrap}
+.btn.acc{background:var(--acc);color:#fff}.btn.ghost{background:#EEF0F3;color:var(--text)}.btn.red{background:#FDECEC;color:var(--red)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 4px}
+input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:vertical;min-height:64px}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:20px}
+.ok{color:var(--acc-d)}
+.center{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth{width:100%;max-width:380px}
+.muted{color:var(--muted)}.small{font-size:13px}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#EEF0F3;color:var(--muted)}
+.tag.on{background:#E3F8EF;color:var(--acc-d)}
+.toggle{position:relative;width:44px;height:26px;flex:none}
+.toggle input{opacity:0;width:0;height:0}
+.toggle span{position:absolute;inset:0;background:#CFD3D9;border-radius:13px;transition:.15s;cursor:pointer}
+.toggle span:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
+.toggle input:checked+span{background:var(--acc)}
+.toggle input:checked+span:after{left:21px}
+.prod{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.prod:first-of-type{border-top:0}
+.prod .n{font-weight:700}.prod .d{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod .p{font-weight:800;color:var(--acc-d);white-space:nowrap}
+.cathead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.cathead .n{font-weight:800;font-size:17px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:var(--dark);color:#fff;border-radius:var(--r);padding:14px 16px}
+.kpi .l{font-size:12px;opacity:.65;font-weight:700;letter-spacing:.05em}.kpi .v{font-size:26px;font-weight:900;margin-top:2px}
+.ped{display:grid;grid-template-columns:86px 1fr auto;gap:14px;align-items:start}
+.ped .senha{background:var(--dark);color:var(--acc);border-radius:12px;text-align:center;padding:10px 0;font-weight:900;font-size:30px;line-height:1}
+.ped .senha small{display:block;font-size:10px;color:#9AA3AE;letter-spacing:.15em;margin-bottom:4px}
+.ped ul{list-style:none;margin-top:4px}.ped li{font-size:14px}
+.st{font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px}
+.st.pago{background:#E3ECFD;color:#3B6FF5}.st.preparando{background:#FFF4DB;color:#B7791F}.st.pronto{background:#E3F8EF;color:var(--acc-d)}.st.entregue{background:#EEF0F3;color:var(--muted)}.st.aguardando_pagamento{background:#FDECEC;color:var(--red)}
+.codein{font-size:28px;letter-spacing:.3em;text-align:center;font-weight:800}
+dialog{border:0;border-radius:18px;padding:0;width:min(520px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(10,12,16,.55)}
+dialog .hd{padding:18px 20px 0;font-weight:800;font-size:19px}
+dialog .bd{padding:4px 20px 8px}
+dialog .ft{padding:14px 20px 18px;display:flex;gap:8px;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;z-index:99;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.colorrow{display:flex;gap:8px;flex-wrap:wrap}
+.colorrow button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.colorrow button.on{border-color:var(--dark)}
+.preview{margin-top:14px;background:var(--dark);color:#fff;border-radius:14px;padding:22px;text-align:center}
+.preview .pn{font-size:24px;font-weight:900}.preview .ps{opacity:.7;font-size:13px;margin-top:2px}
+.preview .pb{margin:16px auto 0;max-width:260px;border-radius:12px;padding:12px;font-weight:800}
+@media (max-width:600px){main{padding:12px}.ped{grid-template-columns:70px 1fr}.ped .acts{grid-column:1/-1}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡</div>
+  <div><div class="t" id="hdrNome">Painel do Estabelecimento</div><div class="s" id="hdrSub">Autoatendimento</div></div>
+  <div class="sp"></div>
+  <select id="lojaSel" class="hidden"></select>
+  <button class="btn sm ghost hidden" id="btnSair">Sair</button>
+</header>
+
+<!-- ============ CONFIGURAÇÃO PENDENTE ============ -->
+<div id="vSetup" class="center hidden">
+  <div class="card auth">
+    <h2>Configure o Firebase</h2>
+    <p class="sub">Abra este arquivo num editor e cole a configuração do seu app Web do Firebase no bloco <b>FIREBASE_CONFIG</b> (veja o README).</p>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="vLogin" class="center hidden">
+  <div class="card auth" style="text-align:center">
+    <h2>Painel do Estabelecimento</h2>
+    <p class="sub">Entre com a sua conta Google para gerenciar o cardápio, os pedidos e os terminais.</p>
+    <button class="btn ghost" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px" id="btnGoogle">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      Entrar com Google</button>
+    <div class="err" id="authErr"></div>
+  </div>
+</div>
+
+<!-- ============ CRIAR LOJA ============ -->
+<div id="vCriar" class="center hidden">
+  <div class="card auth">
+    <h2>Criar estabelecimento</h2>
+    <p class="sub">Dê um nome ao seu negócio. Ele aparece na tela do terminal.</p>
+    <label>Nome do estabelecimento</label><input type="text" id="novaLoja" maxlength="38" placeholder="Ex.: Sabor da Praça">
+    <div class="err" id="criarErr"></div>
+    <button class="btn acc" style="width:100%" id="btnCriar">Criar</button>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="vApp" class="hidden">
+  <nav>
+    <button data-tab="pedidos" class="on">Pedidos</button>
+    <button data-tab="cardapio">Cardápio</button>
+    <button data-tab="terminais">Terminais</button>
+    <button data-tab="loja">Estabelecimento</button>
+  </nav>
+  <main>
+    <!-- PEDIDOS -->
+    <section id="tab-pedidos">
+      <div class="kpis">
+        <div class="kpi"><div class="l">VENDAS HOJE</div><div class="v" id="kTotal">R$ 0,00</div></div>
+        <div class="kpi"><div class="l">PEDIDOS HOJE</div><div class="v" id="kQtd">0</div></div>
+        <div class="kpi"><div class="l">EM ABERTO</div><div class="v" id="kAbertos">0</div></div>
+      </div>
+      <div class="row" style="margin:6px 0 10px"><h3 class="grow" style="margin:0">Últimos pedidos</h3>
+        <label class="row small" style="margin:0;gap:6px"><span class="toggle"><input type="checkbox" id="somOn" checked><span></span></span> Som</label></div>
+      <div id="listaPedidos"><div class="empty">Nenhum pedido ainda.</div></div>
+    </section>
+
+    <!-- CARDÁPIO -->
+    <section id="tab-cardapio" class="hidden">
+      <div class="row" style="margin-bottom:12px;flex-wrap:wrap">
+        <div class="grow"><h2>Cardápio</h2><div class="muted small">As alterações aparecem no terminal em poucos segundos.</div></div>
+        <button class="btn ghost" id="btnNovaCat">+ Categoria</button>
+        <button class="btn acc" id="btnNovoProd">+ Produto</button>
+      </div>
+      <div id="listaCardapio"></div>
+    </section>
+
+    <!-- TERMINAIS -->
+    <section id="tab-terminais" class="hidden">
+      <h2>Terminais</h2>
+      <p class="sub">Ligue o terminal: ele mostra um código de 6 dígitos. Digite aqui para vinculá-lo a este estabelecimento.</p>
+      <div class="card">
+        <label style="margin-top:0">Código mostrado no terminal</label>
+        <div class="row"><input type="text" id="codigo" class="codein grow" maxlength="7" inputmode="numeric" placeholder="000000">
+          <button class="btn acc" id="btnVincular">Vincular</button></div>
+        <label>Nome do terminal (opcional)</label><input type="text" id="nomeTerm" maxlength="30" placeholder="Ex.: Balcão">
+        <div class="err" id="vincErr"></div>
+      </div>
+      <h3>Terminais vinculados</h3>
+      <div id="listaTerminais"></div>
+    </section>
+
+    <!-- LOJA -->
+    <section id="tab-loja" class="hidden">
+      <h2>Estabelecimento</h2>
+      <p class="sub">Nome, mensagem e cor que aparecem no terminal.</p>
+      <div class="card">
+        <div class="row"><div class="grow"><b>Aberto para pedidos</b><div class="muted small">Desligado, o terminal mostra "Fechado no momento".</div></div>
+          <label class="toggle" style="margin:0"><input type="checkbox" id="cfgAberto"><span></span></label></div>
+        <label>Nome</label><input type="text" id="cfgNome" maxlength="38">
+        <label>Subtítulo (opcional)</label><input type="text" id="cfgSub" maxlength="55" placeholder="Ex.: Lanches • Porções • Bebidas">
+        <label>Cor principal</label>
+        <div class="colorrow" id="cores"></div>
+        <div class="preview" id="prev"><div class="pn" id="prevN"></div><div class="ps" id="prevS"></div><div class="pb" id="prevB">Toque para fazer seu pedido</div></div>
+        <div class="err" id="cfgErr"></div>
+        <button class="btn acc" id="btnSalvarCfg">Salvar</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ DIÁLOGOS ============ -->
+<dialog id="dlgProd">
+  <div class="hd" id="dpTitulo">Produto</div>
+  <div class="bd">
+    <label>Nome</label><input type="text" id="pNome" maxlength="38">
+    <label>Descrição</label><textarea id="pDesc" maxlength="105"></textarea>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><label>Preço (R$)</label><input type="text" id="pPreco" inputmode="decimal" placeholder="0,00"></div>
+      <div class="grow"><label>Categoria</label><select id="pCat"></select></div>
+    </div>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><label>Ordem</label><input type="number" id="pOrdem" value="0"></div>
+      <div class="grow"><label>Disponível</label><label class="toggle" style="margin-top:8px"><input type="checkbox" id="pAtivo" checked><span></span></label></div>
+    </div>
+    <div class="err" id="pErr"></div>
+  </div>
+  <div class="ft"><button class="btn red hidden" id="pDel">Excluir</button><div class="grow"></div><button class="btn ghost" data-close>Cancelar</button><button class="btn acc" id="pSalvar">Salvar</button></div>
+</dialog>
+
+<dialog id="dlgCat">
+  <div class="hd" id="dcTitulo">Categoria</div>
+  <div class="bd">
+    <label>Nome</label><input type="text" id="cNome" maxlength="20">
+    <div class="row"><div class="grow"><label>Ordem</label><input type="number" id="cOrdem" value="0"></div>
+      <div class="grow"><label>Visível</label><label class="toggle" style="margin-top:8px"><input type="checkbox" id="cAtivo" checked><span></span></label></div></div>
+    <div class="err" id="cErr"></div>
+  </div>
+  <div class="ft"><button class="btn red hidden" id="cDel">Excluir</button><div class="grow"></div><button class="btn ghost" data-close>Cancelar</button><button class="btn acc" id="cSalvar">Salvar</button></div>
+</dialog>
+
+<script type="module">
+/* =====================================================================
+   FIREBASE_CONFIG — cole aqui a configuração do app Web do seu projeto
+   (Console do Firebase > Configurações do projeto > Seus apps > Web)
+   ===================================================================== */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyADmtGH3Po5LTtPayvFh58alfybd0osnZw",
+  authDomain: "pdvmovel-95afb.firebaseapp.com",
+  databaseURL: "https://pdvmovel-95afb-default-rtdb.firebaseio.com",
+  projectId: "pdvmovel-95afb",
+  appId: "1:223013710287:web:68b813843118acfc6ecaba"
+};
+
+import { connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { connectDatabaseEmulator } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+         signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, update, push, remove, onValue, off, query, orderByChild,
+         limitToLast, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = c => "R$ " + ((c||0)/100).toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const parseMoney = s => { const v = parseFloat(String(s).replace(/\./g,"").replace(",", ".").replace(/[^\d.]/g,"")); return isNaN(v) ? NaN : Math.round(v*100); };
+const centsToInput = c => ((c||0)/100).toFixed(2).replace(".", ",");
+function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2400); }
+function view(id){ ["vSetup","vLogin","vCriar","vApp"].forEach(v=>$("#"+v).classList.toggle("hidden", v!==id)); }
+const fbErr = e => ({
+  "auth/unauthorized-domain":"Este endereço não está autorizado no Firebase (Authentication > Configurações > Domínios autorizados).",
+  "auth/network-request-failed":"Sem conexão com a internet.",
+  "PERMISSION_DENIED":"Sem permissão. Confira as regras do banco (README)."
+}[e?.code] || e?.message || String(e));
+
+if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) { view("vSetup"); throw new Error("Configure o Firebase"); }
+
+const app = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db = getDatabase(app);
+/* Para testes locais com o Firebase Emulator: abra o painel com ?emulador=1 */
+if (new URLSearchParams(location.search).has("emulador")) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectDatabaseEmulator(db, "127.0.0.1", 9000);
+}
+
+let user = null, lojaId = null, lojas = {};
+let cfg = {}, card = { categorias:{}, produtos:{} }, terms = {};
+const subs = [];   // listeners ativos
+function unsubAll(){ while(subs.length) subs.pop()(); }
+function listen(r, cb){ const fn = onValue(r, cb, e => toast(fbErr(e))); subs.push(() => off(r, "value", cb)); return fn; }
+const L = p => ref(db, `lojas/${lojaId}/${p}`);
+const bump = () => ({ [`config/versao`]: serverTimestamp() });   // avisa o terminal
+
+/* ---------------- autenticação (conta Google) ---------------- */
+const google = new GoogleAuthProvider();
+google.setCustomParameters({ prompt: "select_account" });
+$("#btnGoogle").onclick = async () => {
+  $("#authErr").textContent = "";
+  try { await signInWithPopup(auth, google); }
+  catch(e){
+    if (e?.code === "auth/popup-blocked" || e?.code === "auth/operation-not-supported-in-this-environment") { await signInWithRedirect(auth, google); return; }
+    if (e?.code !== "auth/popup-closed-by-user" && e?.code !== "auth/cancelled-popup-request") $("#authErr").textContent = fbErr(e);
+  }
+};
+$("#btnSair").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async u => {
+  unsubAll(); user = u; lojaId = null;
+  $("#btnSair").classList.toggle("hidden", !u); $("#lojaSel").classList.add("hidden");
+  if (!u) { $("#hdrNome").textContent = "Painel do Estabelecimento"; $("#hdrSub").textContent = "Autoatendimento"; view("vLogin"); return; }
+  $("#hdrSub").textContent = u.displayName || u.email;
+  const s = await get(ref(db, `usuarios/${u.uid}/lojas`));
+  lojas = s.val() || {};
+  const ids = Object.keys(lojas);
+  if (!ids.length) { view("vCriar"); return; }
+  const sel = $("#lojaSel"); sel.innerHTML = ids.map(id => `<option value="${id}">${esc(lojas[id])}</option>`).join("");
+  sel.classList.toggle("hidden", ids.length < 2);
+  const last = localStorage.getItem("lojaAtual"); abrirLoja(ids.includes(last) ? last : ids[0]);
+});
+$("#lojaSel").onchange = e => abrirLoja(e.target.value);
+
+/* ---------------- criar estabelecimento ---------------- */
+$("#btnCriar").onclick = async () => {
+  const nome = $("#novaLoja").value.trim(); $("#criarErr").textContent = "";
+  if (!nome) { $("#criarErr").textContent = "Digite o nome."; return; }
+  $("#btnCriar").disabled = true;
+  try {
+    const id = push(ref(db, "lojas")).key;
+    await set(ref(db, `lojas/${id}/membros`), { [user.uid]: true });
+    await update(ref(db), {
+      [`lojas/${id}/config`]: { nome, subtitulo: "", aberto: true, cor: "#19C98D", versao: serverTimestamp() },
+      [`lojas/${id}/contadorSenha`]: 0,
+      [`usuarios/${user.uid}/lojas/${id}`]: nome,
+    });
+    lojas[id] = nome; abrirLoja(id); toast("Estabelecimento criado!");
+  } catch(e){ $("#criarErr").textContent = fbErr(e); }
+  $("#btnCriar").disabled = false;
+};
+
+/* ---------------- abrir loja ---------------- */
+function abrirLoja(id){
+  unsubAll(); lojaId = id; localStorage.setItem("lojaAtual", id); $("#lojaSel").value = id;
+  view("vApp");
+  listen(L("config"), s => { cfg = s.val() || {}; $("#hdrNome").textContent = cfg.nome || "Estabelecimento"; preencherCfg(); });
+  listen(L("cardapio"), s => { card = s.val() || {}; card.categorias ||= {}; card.produtos ||= {}; renderCardapio(); });
+  listen(L("terminais"), s => { terms = s.val() || {}; renderTerminais(); });
+  primeiroPedido = true;
+  listen(query(L("pedidos"), orderByChild("criadoEm"), limitToLast(60)), s => renderPedidos(s.val() || {}));
+}
+
+/* ---------------- abas ---------------- */
+$$("nav button").forEach(b => b.onclick = () => {
+  $$("nav button").forEach(x => x.classList.toggle("on", x === b));
+  $$("main section").forEach(s => s.classList.toggle("hidden", s.id !== "tab-" + b.dataset.tab));
+});
+$$("dialog [data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+
+/* ---------------- pedidos ---------------- */
+let primeiroPedido = true, vistos = new Set();
+const STATUS = { aguardando_pagamento:"Aguardando pagamento", pago:"Novo", preparando:"Preparando", pronto:"Pronto", entregue:"Entregue" };
+const PROX = { pago:["preparando","Preparar"], preparando:["pronto","Pronto"], pronto:["entregue","Entregue"] };
+function beep(){ if (!$("#somOn").checked) return; try { const a = new AudioContext(), o = a.createOscillator(), g = a.createGain();
+  o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.setValueAtTime(.2, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime+.5); o.start(); o.stop(a.currentTime+.5); } catch(e){} }
+function renderPedidos(obj){
+  const arr = Object.entries(obj).map(([id,p]) => ({id, ...p})).sort((a,b) => (b.criadoEm||0) - (a.criadoEm||0));
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const doDia = arr.filter(p => (p.criadoEm||0) >= hoje.getTime());
+  $("#kTotal").textContent = money(doDia.reduce((s,p) => s + (p.total||0), 0));
+  $("#kQtd").textContent = doDia.length;
+  $("#kAbertos").textContent = arr.filter(p => p.status === "pago" || p.status === "preparando").length;
+  let novo = false; arr.forEach(p => { if (!vistos.has(p.id)) { if (!primeiroPedido) novo = true; vistos.add(p.id); } });
+  if (novo) beep(); primeiroPedido = false;
+  $("#listaPedidos").innerHTML = arr.length ? arr.map(p => {
+    const h = p.criadoEm ? new Date(p.criadoEm).toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"}) : "";
+    const d = p.criadoEm ? new Date(p.criadoEm).toLocaleDateString("pt-BR") : "";
+    const prox = PROX[p.status];
+    return `<div class="card ped">
+      <div class="senha"><small>SENHA</small>${String((p.senha||0)%1000).padStart(3,"0")}</div>
+      <div><div class="row" style="gap:8px;flex-wrap:wrap"><span class="st ${esc(p.status)}">${esc(STATUS[p.status]||p.status)}</span>
+        <span class="muted small">${d} ${h} · ${esc(p.pagamento||"")}</span></div>
+        <ul>${(p.itens||[]).map(i => `<li><b>${i.qtd}x</b> ${esc(i.nome)} <span class="muted">${money(i.preco*i.qtd)}</span></li>`).join("")}</ul>
+        <div style="font-weight:800;margin-top:4px">${money(p.total)}</div></div>
+      <div class="acts">${prox ? `<button class="btn sm acc" data-ped="${p.id}" data-st="${prox[0]}">${prox[1]}</button>` : ""}</div>
+    </div>`; }).join("") : `<div class="empty">Nenhum pedido ainda. Faça um pedido de teste no terminal.</div>`;
+  $$("#listaPedidos [data-ped]").forEach(b => b.onclick = () =>
+    update(L(`pedidos/${b.dataset.ped}`), { status: b.dataset.st }).catch(e => toast(fbErr(e))));
+}
+
+/* ---------------- cardápio ---------------- */
+const ordenar = o => Object.entries(o||{}).sort(([,a],[,b]) => (a.ordem||0)-(b.ordem||0) || String(a.nome).localeCompare(b.nome, "pt-BR"));
+function renderCardapio(){
+  const cats = ordenar(card.categorias), prods = ordenar(card.produtos);
+  const grupos = cats.map(([cid,c]) => ({ cid, c, itens: prods.filter(([,p]) => p.categoria === cid) }));
+  const semCat = prods.filter(([,p]) => !card.categorias[p.categoria]);
+  if (semCat.length) grupos.push({ cid:null, c:{ nome:"Sem categoria" }, itens: semCat });
+  if (!grupos.length) { $("#listaCardapio").innerHTML = `<div class="card empty">Comece criando uma categoria (ex.: Lanches, Bebidas) e depois os produtos.</div>`; return; }
+  $("#listaCardapio").innerHTML = grupos.map(g => `<div class="card">
+    <div class="cathead"><span class="n grow">${esc(g.c.nome)}</span>
+      ${g.cid ? `<span class="tag ${g.c.ativo===false?"":"on"}">${g.c.ativo===false?"Oculta":"Visível"}</span>
+      <button class="btn sm ghost" data-cat="${g.cid}">Editar</button>` : ""}</div>
+    ${g.itens.length ? g.itens.map(([pid,p]) => `<div class="prod">
+      <div class="grow"><div class="n">${esc(p.nome)}</div><div class="d">${esc(p.descricao||"")}</div></div>
+      <div class="p">${money(p.preco)}</div>
+      <label class="toggle" title="Disponível"><input type="checkbox" data-ativo="${pid}" ${p.ativo===false?"":"checked"}><span></span></label>
+      <button class="btn sm ghost" data-prod="${pid}">Editar</button></div>`).join("")
+      : `<div class="muted small" style="padding:8px 0">Nenhum produto nesta categoria.</div>`}
+  </div>`).join("");
+  $$("#listaCardapio [data-cat]").forEach(b => b.onclick = () => abrirCat(b.dataset.cat));
+  $$("#listaCardapio [data-prod]").forEach(b => b.onclick = () => abrirProd(b.dataset.prod));
+  $$("#listaCardapio [data-ativo]").forEach(i => i.onchange = () =>
+    update(ref(db, `lojas/${lojaId}`), { [`cardapio/produtos/${i.dataset.ativo}/ativo`]: i.checked, ...bump() })
+      .then(() => toast(i.checked ? "Produto disponível" : "Produto indisponível")).catch(e => toast(fbErr(e))));
+}
+
+/* categoria */
+let catEdit = null;
+$("#btnNovaCat").onclick = () => abrirCat(null);
+function abrirCat(id){
+  catEdit = id; const c = id ? card.categorias[id] : { nome:"", ordem: Object.keys(card.categorias).length + 1, ativo:true };
+  $("#dcTitulo").textContent = id ? "Editar categoria" : "Nova categoria";
+  $("#cNome").value = c.nome || ""; $("#cOrdem").value = c.ordem || 0; $("#cAtivo").checked = c.ativo !== false;
+  $("#cDel").classList.toggle("hidden", !id); $("#cErr").textContent = ""; $("#dlgCat").showModal(); $("#cNome").focus();
+}
+$("#cSalvar").onclick = async () => {
+  const nome = $("#cNome").value.trim(); if (!nome) { $("#cErr").textContent = "Digite o nome."; return; }
+  const id = catEdit || push(L("cardapio/categorias")).key;
+  try { await update(ref(db, `lojas/${lojaId}`), { [`cardapio/categorias/${id}`]: { nome, ordem: +$("#cOrdem").value || 0, ativo: $("#cAtivo").checked }, ...bump() });
+    $("#dlgCat").close(); toast("Categoria salva"); } catch(e){ $("#cErr").textContent = fbErr(e); }
+};
+$("#cDel").onclick = async () => {
+  const usados = Object.values(card.produtos).filter(p => p.categoria === catEdit).length;
+  if (usados) { $("#cErr").textContent = `Mova ou exclua os ${usados} produto(s) desta categoria antes.`; return; }
+  if (!confirm("Excluir esta categoria?")) return;
+  await update(ref(db, `lojas/${lojaId}`), { [`cardapio/categorias/${catEdit}`]: null, ...bump() }); $("#dlgCat").close();
+};
+
+/* produto */
+let prodEdit = null;
+$("#btnNovoProd").onclick = () => {
+  if (!Object.keys(card.categorias).length) { toast("Crie uma categoria primeiro"); abrirCat(null); return; }
+  abrirProd(null);
+};
+function abrirProd(id){
+  prodEdit = id; const p = id ? card.produtos[id] : { nome:"", descricao:"", preco:0, ordem:0, ativo:true, categoria: ordenar(card.categorias)[0]?.[0] };
+  $("#dpTitulo").textContent = id ? "Editar produto" : "Novo produto";
+  $("#pCat").innerHTML = ordenar(card.categorias).map(([cid,c]) => `<option value="${cid}">${esc(c.nome)}</option>`).join("");
+  $("#pNome").value = p.nome || ""; $("#pDesc").value = p.descricao || ""; $("#pPreco").value = id ? centsToInput(p.preco) : "";
+  $("#pCat").value = p.categoria || ""; $("#pOrdem").value = p.ordem || 0; $("#pAtivo").checked = p.ativo !== false;
+  $("#pDel").classList.toggle("hidden", !id); $("#pErr").textContent = ""; $("#dlgProd").showModal(); $("#pNome").focus();
+}
+$("#pSalvar").onclick = async () => {
+  const nome = $("#pNome").value.trim(), preco = parseMoney($("#pPreco").value);
+  if (!nome) { $("#pErr").textContent = "Digite o nome."; return; }
+  if (isNaN(preco) || preco < 0) { $("#pErr").textContent = "Preço inválido. Use o formato 24,90."; return; }
+  const id = prodEdit || push(L("cardapio/produtos")).key;
+  const dados = { nome, descricao: $("#pDesc").value.trim(), preco, categoria: $("#pCat").value, ordem: +$("#pOrdem").value || 0, ativo: $("#pAtivo").checked };
+  try { await update(ref(db, `lojas/${lojaId}`), { [`cardapio/produtos/${id}`]: dados, ...bump() });
+    $("#dlgProd").close(); toast("Produto salvo — já está no terminal"); } catch(e){ $("#pErr").textContent = fbErr(e); }
+};
+$("#pDel").onclick = async () => {
+  if (!confirm("Excluir este produto?")) return;
+  await update(ref(db, `lojas/${lojaId}`), { [`cardapio/produtos/${prodEdit}`]: null, ...bump() }); $("#dlgProd").close();
+};
+
+/* ---------------- terminais ---------------- */
+$("#codigo").oninput = e => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 6); };
+$("#btnVincular").onclick = async () => {
+  const code = $("#codigo").value; $("#vincErr").textContent = "";
+  if (code.length !== 6) { $("#vincErr").textContent = "O código tem 6 dígitos."; return; }
+  try {
+    const s = await get(ref(db, `pareamentos/${code}`));
+    const p = s.val();
+    if (!p?.uid) { $("#vincErr").textContent = "Código não encontrado. Confira o número na tela do terminal."; return; }
+    if (p.criadoEm && Date.now() - p.criadoEm > 30*60*1000) { $("#vincErr").textContent = "Código expirado. Reinicie o terminal para gerar outro."; return; }
+    const nome = $("#nomeTerm").value.trim() || `Terminal ${Object.keys(terms).length + 1}`;
+    await update(ref(db), {
+      [`terminais/${p.uid}`]: lojaId,
+      [`lojas/${lojaId}/terminais/${p.uid}`]: { nome, pareadoEm: serverTimestamp() },
+      [`pareamentos/${code}`]: null,
+    });
+    $("#codigo").value = ""; $("#nomeTerm").value = ""; toast("Terminal vinculado! Ele vai baixar o cardápio agora.");
+  } catch(e){ $("#vincErr").textContent = fbErr(e); }
+};
+function renderTerminais(){
+  const arr = Object.entries(terms);
+  $("#listaTerminais").innerHTML = arr.length ? arr.map(([uid,t]) => `<div class="card row">
+      <div class="grow"><b>${esc(t.nome)}</b><div class="muted small">Vinculado em ${t.pareadoEm ? new Date(t.pareadoEm).toLocaleString("pt-BR") : "-"} · ID ${esc(uid.slice(0,8))}…</div></div>
+      <button class="btn sm ghost" data-ren="${uid}">Renomear</button>
+      <button class="btn sm red" data-unl="${uid}">Desvincular</button></div>`).join("")
+    : `<div class="card empty">Nenhum terminal vinculado ainda.</div>`;
+  $$("[data-ren]").forEach(b => b.onclick = () => { const n = prompt("Nome do terminal:", terms[b.dataset.ren].nome); if (n) update(L(`terminais/${b.dataset.ren}`), { nome: n.trim().slice(0,30) }); });
+  $$("[data-unl]").forEach(b => b.onclick = async () => {
+    if (!confirm("Desvincular este terminal? Ele volta a mostrar um código de vínculo.")) return;
+    try { await update(ref(db), { [`terminais/${b.dataset.unl}`]: null, [`lojas/${lojaId}/terminais/${b.dataset.unl}`]: null }); toast("Terminal desvinculado"); }
+    catch(e){ toast(fbErr(e)); }
+  });
+}
+
+/* ---------------- estabelecimento ---------------- */
+const CORES = ["#19C98D","#0EA5E9","#6366F1","#E5484D","#F97316","#EAB308","#A855F7","#111827"];
+let corSel = "#19C98D";
+function preencherCfg(){
+  if (document.activeElement && document.activeElement.closest?.("#tab-loja")) return; // não sobrescreve enquanto edita
+  $("#cfgNome").value = cfg.nome || ""; $("#cfgSub").value = cfg.subtitulo || ""; $("#cfgAberto").checked = cfg.aberto !== false;
+  corSel = cfg.cor || "#19C98D"; renderCores(); preview();
+}
+function renderCores(){
+  $("#cores").innerHTML = CORES.map(c => `<button style="background:${c}" class="${c.toLowerCase()===corSel.toLowerCase()?"on":""}" data-cor="${c}"></button>`).join("");
+  $$("#cores button").forEach(b => b.onclick = () => { corSel = b.dataset.cor; renderCores(); preview(); });
+}
+function preview(){ $("#prevN").textContent = $("#cfgNome").value || "Nome"; $("#prevS").textContent = $("#cfgSub").value;
+  const ab = $("#cfgAberto").checked; $("#prevB").textContent = ab ? "Toque para fazer seu pedido" : "Fechado no momento";
+  $("#prevB").style.background = ab ? corSel : "#1E2733"; }
+["#cfgNome","#cfgSub","#cfgAberto"].forEach(s => $(s).addEventListener("input", preview));
+$("#btnSalvarCfg").onclick = async () => {
+  const nome = $("#cfgNome").value.trim(); $("#cfgErr").textContent = "";
+  if (!nome) { $("#cfgErr").textContent = "Digite o nome."; return; }
+  try {
+    await update(ref(db), {
+      [`lojas/${lojaId}/config/nome`]: nome, [`lojas/${lojaId}/config/subtitulo`]: $("#cfgSub").value.trim(),
+      [`lojas/${lojaId}/config/aberto`]: $("#cfgAberto").checked, [`lojas/${lojaId}/config/cor`]: corSel,
+      [`lojas/${lojaId}/config/versao`]: serverTimestamp(), [`usuarios/${user.uid}/lojas/${lojaId}`]: nome,
+    });
+    document.activeElement?.blur(); toast("Salvo — o terminal atualiza em instantes");
+  } catch(e){ $("#cfgErr").textContent = fbErr(e); }
+};
+</script>
+</body>
+</html>
