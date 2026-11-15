@@ -225,6 +225,7 @@ async function mpRetorno(req, env, url) {
     conectado: true, contaId: String(conta.id || ""), contaNome: conta.nome || "", contaEmail: conta.email || "",
     teste: t.live_mode === false, conectadoEm: TS,
   });
+  await db(env, "PUT", `lojas/${loja}/config/versao`, TS);   /* terminal relê e liga o Pix */
   return volta("ok");
 }
 
@@ -234,6 +235,7 @@ async function mpDesconectar(req, env) {
   await exigirDono(env, u, loja);
   await env.KV.delete("mp:" + loja);
   await db(env, "DELETE", `lojas/${loja}/pagamentos/mp`);
+  await db(env, "PUT", `lojas/${loja}/config/versao`, TS);
   return json({ ok: true });
 }
 
