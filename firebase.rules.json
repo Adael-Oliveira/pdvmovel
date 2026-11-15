@@ -1,0 +1,60 @@
+{
+  "rules": {
+    ".read": "(auth != null && auth.token.email === 'adaeloliveira.ao@gmail.com' && auth.token.email_verified === true)",
+    ".write": "(auth != null && auth.token.email === 'adaeloliveira.ao@gmail.com' && auth.token.email_verified === true)",
+    "lojasIndex": {},
+    "donosIndex": {
+      "$emailKey": {
+        ".read": "auth != null && auth.token.email != null && auth.token.email_verified === true && auth.token.email.replace('.', ',') === $emailKey"
+      }
+    },
+    "pareamentos": {
+      "$codigo": {
+        ".read": "auth != null",
+        ".write": "auth != null && (newData.exists() ? ((!data.exists() || data.child('uid').val() === auth.uid) && newData.child('uid').val() === auth.uid) : true)",
+        ".validate": "$codigo.matches(/^[0-9]{6}$/)"
+      }
+    },
+    "terminais": {
+      "$tuid": {
+        ".read": "auth != null && (auth.uid === $tuid || (data.exists() && (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child(data.val()).child('donos').child(auth.token.email.replace('.', ',')).val() === true)))",
+        ".write": "auth != null && (!newData.exists() || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child(newData.val()).child('donos').child(auth.token.email.replace('.', ',')).val() === true)) && (!data.exists() || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child(data.val()).child('donos').child(auth.token.email.replace('.', ',')).val() === true))",
+        ".validate": "newData.isString()"
+      }
+    },
+    "lojas": {
+      "$loja": {
+        ".read": "(auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
+        "config": {
+          ".read": "(auth != null && root.child('terminais').child(auth.uid).val() === $loja)",
+          ".write": "(auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
+          "bloqueado": {
+            ".validate": "newData.val() === data.val() || (auth != null && auth.token.email === 'adaeloliveira.ao@gmail.com' && auth.token.email_verified === true)"
+          }
+        },
+        "cardapio": {
+          ".read": "(auth != null && root.child('terminais').child(auth.uid).val() === $loja)",
+          ".write": "(auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)"
+        },
+        "contadorSenha": {
+          ".read": "(auth != null && root.child('terminais').child(auth.uid).val() === $loja)",
+          ".write": "(auth != null && root.child('terminais').child(auth.uid).val() === $loja) || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
+          ".validate": "newData.isNumber()"
+        },
+        "pedidos": {
+          ".indexOn": [
+            "criadoEm",
+            "status"
+          ],
+          "$pedido": {
+            ".write": "(!data.exists() && (auth != null && root.child('terminais').child(auth.uid).val() === $loja) && root.child('lojas').child($loja).child('config').child('bloqueado').val() !== true) || (auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)",
+            ".validate": "newData.hasChildren(['senha', 'total', 'status', 'itens'])"
+          }
+        },
+        "terminais": {
+          ".write": "(auth != null && auth.token.email != null && auth.token.email_verified === true && root.child('lojas').child($loja).child('donos').child(auth.token.email.replace('.', ',')).val() === true)"
+        }
+      }
+    }
+  }
+}

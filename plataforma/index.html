@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plataforma · PDVMovel</title>
+<meta name="theme-color" content="#12151C">
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#F3F4F6;--card:#fff;--dark:#12151C;--text:#14161B;--muted:#6B7280;--line:#E5E7EB;--acc:#19C98D;--acc-d:#0E9F6E;--red:#E5484D;--purple:#6C5CE7;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+header{background:var(--dark);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+header .logo{width:36px;height:36px;border-radius:10px;background:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:900}
+header .t{font-weight:800;font-size:17px}header .s{font-size:12px;opacity:.65}
+header .sp{flex:1}
+main{max-width:1040px;margin:0 auto;padding:18px}
+h2{font-size:22px}h3{font-size:16px;margin:18px 0 8px}
+.sub{color:var(--muted);margin-bottom:16px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}.wrap{flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--dark);color:#fff;white-space:nowrap;text-decoration:none;display:inline-block}
+.btn.acc{background:var(--acc)}.btn.pur{background:var(--purple)}.btn.ghost{background:#EEF0F3;color:var(--text)}.btn.red{background:#FDECEC;color:var(--red)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 4px}
+input[type=text],input[type=email],input[type=date],select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;outline:none}
+input:focus,textarea:focus{border-color:var(--purple)}
+textarea{resize:vertical;min-height:60px}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:20px}
+.center{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth{width:100%;max-width:380px;text-align:center}
+.muted{color:var(--muted)}.small{font-size:13px}
+.tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800}
+.tag.on{background:#E3F8EF;color:var(--acc-d)}.tag.off{background:#FDECEC;color:var(--red)}.tag.warn{background:#FFF4DB;color:#B7791F}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--dark);color:#fff;border-radius:var(--r);padding:14px 16px}
+.kpi .l{font-size:12px;opacity:.65;font-weight:700;letter-spacing:.05em}.kpi .v{font-size:26px;font-weight:900;margin-top:2px}
+.rest{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.rest .n{font-weight:800;font-size:17px}
+.rest .meta{color:var(--muted);font-size:13px;margin-top:3px}
+.rest .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.chiprow{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#EEF0F3;border-radius:999px;padding:5px 6px 5px 12px;font-size:13px;font-weight:600}
+.chip button{border:0;background:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer;font-weight:800;color:var(--red)}
+.toggle{position:relative;width:44px;height:26px;flex:none;display:inline-block}
+.toggle input{opacity:0;width:0;height:0}
+.toggle span{position:absolute;inset:0;background:#CFD3D9;border-radius:13px;transition:.15s;cursor:pointer}
+.toggle span:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
+.toggle input:checked+span{background:var(--acc)}.toggle input:checked+span:after{left:21px}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(10,12,16,.55)}
+dialog .hd{padding:18px 20px 0;font-weight:800;font-size:19px}
+dialog .bd{padding:4px 20px 8px;max-height:70vh;overflow:auto}
+dialog .ft{padding:14px 20px 18px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;z-index:99}
+.search{max-width:280px}
+@media (max-width:640px){main{padding:12px}.rest{grid-template-columns:1fr}.rest .acts{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">P</div>
+  <div><div class="t">PDVMovel · Plataforma</div><div class="s" id="hdrSub">Administração</div></div>
+  <div class="sp"></div>
+  <button class="btn sm ghost hidden" id="btnSair">Sair</button>
+</header>
+
+<div id="vLogin" class="center hidden">
+  <div class="card auth">
+    <h2>Painel da plataforma</h2>
+    <p class="sub">Acesso restrito ao administrador do PDVMovel.</p>
+    <button class="btn ghost" style="width:100%;padding:13px" id="btnGoogle">Entrar com Google</button>
+    <div class="err" id="authErr"></div>
+  </div>
+</div>
+
+<div id="vNegado" class="center hidden">
+  <div class="card auth">
+    <h2>Acesso restrito</h2>
+    <p class="sub" id="negadoTxt">Esta área é só do administrador da plataforma.</p>
+    <a class="btn acc" href="../cliente/" style="margin-bottom:10px">Ir para o painel do estabelecimento</a><br>
+    <button class="btn ghost" id="btnSair2">Entrar com outra conta</button>
+  </div>
+</div>
+
+<div id="vApp" class="hidden">
+  <main>
+    <div class="kpis">
+      <div class="kpi"><div class="l">RESTAURANTES</div><div class="v" id="kTot">0</div></div>
+      <div class="kpi"><div class="l">ATIVOS</div><div class="v" id="kAtivos">0</div></div>
+      <div class="kpi"><div class="l">SUSPENSOS</div><div class="v" id="kBloq">0</div></div>
+      <div class="kpi"><div class="l">TERMINAIS</div><div class="v" id="kTerm">0</div></div>
+      <div class="kpi"><div class="l">PEDIDOS HOJE</div><div class="v" id="kPed">0</div></div>
+    </div>
+    <div class="row wrap" style="margin-bottom:12px">
+      <h2 class="grow">Restaurantes</h2>
+      <input type="text" id="busca" class="search" placeholder="Buscar por nome ou e-mail">
+      <button class="btn pur" id="btnNovo">+ Novo restaurante</button>
+    </div>
+    <div id="lista"><div class="empty">Carregando...</div></div>
+  </main>
+</div>
+
+<dialog id="dlgNovo">
+  <div class="hd">Novo restaurante</div>
+  <div class="bd">
+    <label>Nome do estabelecimento</label><input type="text" id="nNome" maxlength="38" placeholder="Ex.: Sabor da Praça">
+    <label>E-mail Google do dono</label><input type="email" id="nEmail" placeholder="dono@gmail.com">
+    <div class="small muted" style="margin-top:4px">Só esse e-mail consegue entrar no painel do estabelecimento.</div>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><label>Plano</label><input type="text" id="nPlano" value="MVP"></div>
+      <div class="grow"><label>Vencimento</label><input type="date" id="nVenc"></div>
+    </div>
+    <label>Observações (só você vê)</label><textarea id="nObs" placeholder="Telefone, endereço, combinado..."></textarea>
+    <div class="err" id="nErr"></div>
+  </div>
+  <div class="ft"><button class="btn ghost" data-close>Cancelar</button><button class="btn pur" id="nSalvar">Cadastrar</button></div>
+</dialog>
+
+<dialog id="dlgEdit">
+  <div class="hd" id="eTitulo">Restaurante</div>
+  <div class="bd">
+    <div class="row" style="margin-top:10px"><div class="grow"><b>Conta ativa</b><div class="muted small">Desligado: terminal mostra "Fechado" e não recebe pedidos.</div></div>
+      <label class="toggle" style="margin:0"><input type="checkbox" id="eAtivo"><span></span></label></div>
+    <label>Nome</label><input type="text" id="eNome" maxlength="38">
+    <label>Donos (e-mails Google com acesso ao painel)</label>
+    <div class="chiprow" id="eDonos"></div>
+    <div class="row" style="margin-top:8px"><input type="email" id="eNovoDono" class="grow" placeholder="novo@gmail.com"><button class="btn sm ghost" id="eAddDono">Adicionar</button></div>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><label>Plano</label><input type="text" id="ePlano"></div>
+      <div class="grow"><label>Vencimento</label><input type="date" id="eVenc"></div>
+    </div>
+    <label>Observações</label><textarea id="eObs"></textarea>
+    <h3>Terminais</h3>
+    <div id="eTerms" class="small muted"></div>
+    <div class="small muted" style="margin-top:14px">ID: <span id="eId"></span></div>
+    <div class="err" id="eErr"></div>
+  </div>
+  <div class="ft">
+    <button class="btn red" id="eExcluir">Excluir</button>
+    <div class="grow"></div>
+    <button class="btn ghost" data-close>Fechar</button>
+    <button class="btn pur" id="eSalvar">Salvar</button>
+  </div>
+</dialog>
+
+<script type="module">
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyADmtGH3Po5LTtPayvFh58alfybd0osnZw",
+  authDomain: "pdvmovel-95afb.firebaseapp.com",
+  databaseURL: "https://pdvmovel-95afb-default-rtdb.firebaseio.com",
+  projectId: "pdvmovel-95afb",
+  appId: "1:223013710287:web:68b813843118acfc6ecaba"
+};
+const ADMIN_EMAIL = "adaeloliveira.ao@gmail.com";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, connectAuthEmulator }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, update, push, onValue, off, query, orderByChild, startAt, serverTimestamp, connectDatabaseEmulator }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const emailKey = e => String(e || "").trim().toLowerCase().replace(/\./g, ",");
+const keyEmail = k => String(k).replace(/,/g, ".");
+const validEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+function toast(m){ const t=document.createElement("div"); t.className="toast"; t.textContent=m; document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
+function view(id){ ["vLogin","vNegado","vApp"].forEach(v => $("#"+v).classList.toggle("hidden", v!==id)); }
+$$("dialog [data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+
+const app = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app), db = getDatabase(app);
+if (new URLSearchParams(location.search).has("emulador")) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectDatabaseEmulator(db, "127.0.0.1", 9000);
+}
+
+/* ---------- login ---------- */
+const google = new GoogleAuthProvider(); google.setCustomParameters({ prompt: "select_account" });
+$("#btnGoogle").onclick = async () => {
+  try { await signInWithPopup(auth, google); }
+  catch(e){ if (e?.code === "auth/popup-blocked") return signInWithRedirect(auth, google);
+    if (e?.code !== "auth/popup-closed-by-user") $("#authErr").textContent = e.message; }
+};
+$("#btnSair").onclick = $("#btnSair2").onclick = () => signOut(auth);
+
+let lojas = {};              // id -> {index, config, plataforma, donos, terminais, pedidosHoje}
+const subs = [];
+const unsubAll = () => { while (subs.length) subs.pop()(); };
+function listen(path, cb){ const r = ref(db, path); onValue(r, cb, e => toast(e.message)); subs.push(() => off(r)); }
+
+onAuthStateChanged(auth, async u => {
+  unsubAll(); lojas = {};
+  $("#btnSair").classList.toggle("hidden", !u);
+  if (!u) { view("vLogin"); return; }
+  $("#hdrSub").textContent = u.email;
+  if (!(u.email === ADMIN_EMAIL && u.emailVerified)) {
+    $("#negadoTxt").textContent = `A conta ${u.email} não é administradora da plataforma.`;
+    view("vNegado"); return;
+  }
+  view("vApp");
+  await migrarIndice();
+  listen("lojasIndex", s => {
+    const idx = s.val() || {};
+    for (const id of Object.keys(lojas)) if (!idx[id]) delete lojas[id];
+    for (const [id, v] of Object.entries(idx)) if (!lojas[id]) { lojas[id] = { index: v }; acompanhar(id); } else lojas[id].index = v;
+    render();
+  });
+});
+
+/* lojas criadas antes do índice (versão antiga do painel) */
+async function migrarIndice(){
+  try {
+    if ((await get(ref(db, "lojasIndex"))).exists()) return;
+    const all = (await get(ref(db, "lojas"))).val() || {};
+    const up = {};
+    for (const [id, l] of Object.entries(all)) up[`lojasIndex/${id}`] = { nome: l.config?.nome || "Sem nome", criadoEm: serverTimestamp() };
+    if (Object.keys(up).length) await update(ref(db), up);
+  } catch(e){ console.warn(e); }
+}
+
+const hoje0 = () => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); };
+function acompanhar(id){
+  for (const k of ["config", "plataforma", "donos", "terminais"]) listen(`lojas/${id}/${k}`, s => { if (lojas[id]) { lojas[id][k] = s.val(); render(); } });
+  get(query(ref(db, `lojas/${id}/pedidos`), orderByChild("criadoEm"), startAt(hoje0())))
+    .then(s => { if (lojas[id]) { lojas[id].pedidosHoje = s.size; render(); } }).catch(() => {});
+}
+
+/* ---------- lista ---------- */
+$("#busca").oninput = () => render();
+function statusOf(l){
+  const p = l.plataforma || {};
+  if (p.ativo === false || l.config?.bloqueado) return ["off", "Suspenso"];
+  if (p.vencimento && p.vencimento < new Date().toISOString().slice(0,10)) return ["warn", "Vencido"];
+  return ["on", "Ativo"];
+}
+function render(){
+  const q = $("#busca").value.trim().toLowerCase();
+  const arr = Object.entries(lojas).map(([id, l]) => ({ id, ...l }))
+    .sort((a, b) => String(a.config?.nome || a.index?.nome).localeCompare(String(b.config?.nome || b.index?.nome), "pt-BR"));
+  const vis = arr.filter(l => !q || (l.config?.nome || l.index?.nome || "").toLowerCase().includes(q) ||
+                                Object.keys(l.donos || {}).some(k => keyEmail(k).includes(q)));
+  $("#kTot").textContent = arr.length;
+  $("#kAtivos").textContent = arr.filter(l => statusOf(l)[0] === "on").length;
+  $("#kBloq").textContent = arr.filter(l => statusOf(l)[0] === "off").length;
+  $("#kTerm").textContent = arr.reduce((s, l) => s + Object.keys(l.terminais || {}).length, 0);
+  $("#kPed").textContent = arr.reduce((s, l) => s + (l.pedidosHoje || 0), 0);
+  if (!vis.length) { $("#lista").innerHTML = `<div class="card empty">${arr.length ? "Nada encontrado." : "Nenhum restaurante ainda. Clique em \"+ Novo restaurante\"."}</div>`; return; }
+  $("#lista").innerHTML = vis.map(l => {
+    const [cls, txt] = statusOf(l), p = l.plataforma || {};
+    const donos = Object.keys(l.donos || {}).map(keyEmail);
+    const nt = Object.keys(l.terminais || {}).length;
+    const bloq = cls === "off";
+    return `<div class="card rest">
+      <div><div class="row" style="gap:8px"><span class="n">${esc(l.config?.nome || l.index?.nome)}</span><span class="tag ${cls}">${txt}</span></div>
+        <div class="meta">${donos.length ? esc(donos.join(", ")) : '<span style="color:var(--red)">sem dono cadastrado</span>'}</div>
+        <div class="meta">${esc(p.plano || "—")}${p.vencimento ? " · vence " + new Date(p.vencimento + "T12:00").toLocaleDateString("pt-BR") : ""} · ${nt} terminal(is) · ${l.pedidosHoje ?? "–"} pedido(s) hoje</div></div>
+      <div class="acts">
+        <a class="btn sm ghost" href="../cliente/?loja=${encodeURIComponent(l.id)}" target="_blank" rel="noopener">Suporte</a>
+        <button class="btn sm ${bloq ? "acc" : "red"}" data-bloq="${l.id}">${bloq ? "Reativar" : "Suspender"}</button>
+        <button class="btn sm pur" data-edit="${l.id}">Editar</button>
+      </div></div>`;
+  }).join("");
+  $$("[data-edit]").forEach(b => b.onclick = () => abrirEdit(b.dataset.edit));
+  $$("[data-bloq]").forEach(b => b.onclick = () => setAtivo(b.dataset.bloq, statusOf(lojas[b.dataset.bloq])[0] === "off"));
+}
+
+async function setAtivo(id, ativo){
+  if (!ativo && !confirm(`Suspender "${lojas[id].config?.nome}"? O terminal vai mostrar "Fechado" e não aceitará pedidos.`)) return;
+  try {
+    await update(ref(db, `lojas/${id}`), { "plataforma/ativo": ativo, "config/bloqueado": !ativo, "config/versao": serverTimestamp() });
+    toast(ativo ? "Restaurante reativado" : "Restaurante suspenso");
+  } catch(e){ toast(e.message); }
+}
+
+/* ---------- novo restaurante ---------- */
+$("#btnNovo").onclick = () => { ["#nNome","#nEmail","#nObs","#nVenc"].forEach(s => $(s).value = ""); $("#nPlano").value = "MVP"; $("#nErr").textContent = ""; $("#dlgNovo").showModal(); $("#nNome").focus(); };
+$("#nSalvar").onclick = async () => {
+  const nome = $("#nNome").value.trim(), email = $("#nEmail").value.trim().toLowerCase();
+  if (!nome) return $("#nErr").textContent = "Digite o nome.";
+  if (!validEmail(email)) return $("#nErr").textContent = "E-mail do dono inválido.";
+  $("#nSalvar").disabled = true;
+  try {
+    const id = push(ref(db, "lojas")).key, k = emailKey(email);
+    await update(ref(db), {
+      [`lojasIndex/${id}`]: { nome, criadoEm: serverTimestamp() },
+      [`lojas/${id}/config`]: { nome, subtitulo: "", aberto: true, bloqueado: false, cor: "#19C98D", versao: serverTimestamp() },
+      [`lojas/${id}/contadorSenha`]: 0,
+      [`lojas/${id}/donos/${k}`]: true,
+      [`lojas/${id}/plataforma`]: { ativo: true, plano: $("#nPlano").value.trim(), vencimento: $("#nVenc").value || "", obs: $("#nObs").value.trim(), criadoEm: serverTimestamp() },
+      [`donosIndex/${k}/${id}`]: nome,
+    });
+    $("#dlgNovo").close(); toast(`Cadastrado! ${email} já pode entrar no painel.`);
+  } catch(e){ $("#nErr").textContent = e.message; }
+  $("#nSalvar").disabled = false;
+};
+
+/* ---------- editar ---------- */
+let editId = null, donosEdit = {};
+function abrirEdit(id){
+  editId = id; const l = lojas[id], p = l.plataforma || {};
+  donosEdit = { ...(l.donos || {}) };
+  $("#eTitulo").textContent = l.config?.nome || l.index?.nome;
+  $("#eNome").value = l.config?.nome || l.index?.nome || "";
+  $("#eAtivo").checked = statusOf(l)[0] !== "off";
+  $("#ePlano").value = p.plano || ""; $("#eVenc").value = p.vencimento || ""; $("#eObs").value = p.obs || "";
+  $("#eId").textContent = id; $("#eErr").textContent = ""; $("#eNovoDono").value = "";
+  renderDonos(); renderTerms();
+  $("#dlgEdit").showModal();
+}
+function renderDonos(){
+  const ks = Object.keys(donosEdit);
+  $("#eDonos").innerHTML = ks.length ? ks.map(k => `<span class="chip">${esc(keyEmail(k))}<button data-rm="${esc(k)}" title="Remover">×</button></span>`).join("") : '<span class="small muted">Nenhum dono.</span>';
+  $$("#eDonos [data-rm]").forEach(b => b.onclick = () => { delete donosEdit[b.dataset.rm]; renderDonos(); });
+}
+function renderTerms(){
+  const t = Object.entries(lojas[editId].terminais || {});
+  $("#eTerms").innerHTML = t.length ? t.map(([uid, v]) => `<div class="row" style="padding:6px 0"><span class="grow">${esc(v.nome)} · ${esc(uid.slice(0,8))}…</span><button class="btn sm red" data-unl="${uid}">Desvincular</button></div>`).join("") : "Nenhum terminal vinculado.";
+  $$("#eTerms [data-unl]").forEach(b => b.onclick = async () => {
+    if (!confirm("Desvincular este terminal?")) return;
+    await update(ref(db), { [`terminais/${b.dataset.unl}`]: null, [`lojas/${editId}/terminais/${b.dataset.unl}`]: null });
+    toast("Terminal desvinculado");
+  });
+}
+$("#eAddDono").onclick = () => {
+  const e = $("#eNovoDono").value.trim().toLowerCase();
+  if (!validEmail(e)) return $("#eErr").textContent = "E-mail inválido.";
+  donosEdit[emailKey(e)] = true; $("#eNovoDono").value = ""; $("#eErr").textContent = ""; renderDonos();
+};
+$("#eSalvar").onclick = async () => {
+  const nome = $("#eNome").value.trim(); if (!nome) return $("#eErr").textContent = "Digite o nome.";
+  const l = lojas[editId], antes = l.donos || {}, ativo = $("#eAtivo").checked;
+  const up = {
+    [`lojasIndex/${editId}/nome`]: nome,
+    [`lojas/${editId}/config/nome`]: nome,
+    [`lojas/${editId}/config/bloqueado`]: !ativo,
+    [`lojas/${editId}/config/versao`]: serverTimestamp(),
+    [`lojas/${editId}/plataforma/ativo`]: ativo,
+    [`lojas/${editId}/plataforma/plano`]: $("#ePlano").value.trim(),
+    [`lojas/${editId}/plataforma/vencimento`]: $("#eVenc").value || "",
+    [`lojas/${editId}/plataforma/obs`]: $("#eObs").value.trim(),
+  };
+  for (const k of Object.keys(antes)) if (!donosEdit[k]) { up[`lojas/${editId}/donos/${k}`] = null; up[`donosIndex/${k}/${editId}`] = null; }
+  for (const k of Object.keys(donosEdit)) { up[`lojas/${editId}/donos/${k}`] = true; up[`donosIndex/${k}/${editId}`] = nome; }
+  try { await update(ref(db), up); $("#dlgEdit").close(); toast("Salvo"); } catch(e){ $("#eErr").textContent = e.message; }
+};
+$("#eExcluir").onclick = async () => {
+  const l = lojas[editId], nome = l.config?.nome || l.index?.nome;
+  const conf = prompt(`Isto apaga o restaurante, o cardápio e TODOS os pedidos. Para confirmar, digite o nome: ${nome}`);
+  if (conf !== nome) { if (conf !== null) toast("Nome não confere. Nada foi apagado."); return; }
+  const up = { [`lojasIndex/${editId}`]: null, [`lojas/${editId}`]: null };
+  for (const k of Object.keys(l.donos || {})) up[`donosIndex/${k}/${editId}`] = null;
+  for (const uid of Object.keys(l.terminais || {})) up[`terminais/${uid}`] = null;
+  try { await update(ref(db), up); $("#dlgEdit").close(); toast("Restaurante excluído"); } catch(e){ $("#eErr").textContent = e.message; }
+};
+</script>
+</body>
+</html>
